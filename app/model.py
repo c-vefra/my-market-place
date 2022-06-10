@@ -2,23 +2,23 @@ from pydantic import BaseModel, Field
 from typing import Optional
 
 
-class AuthorLogin(BaseModel):
+class AuthorBase(BaseModel):
     pseudonym:str = Field(
         default=None,
         min_length=3,
-        max_length=20
-    )
-    password:str = Field(
-        ...,
-        min_length=8
+        max_length=20,
+        example="sr.x"
     )
 
-class Author(BaseModel):
-    pseudonym:str = Field(
-        default=None,
-        min_length=3,
-        max_length=20
+class AuthorRegister(AuthorBase):
+    password:str = Field(
+        ...,
+        min_length=8,
+        example="password123"
     )
+
+class Author(AuthorBase):
+    pass
 
 
 class Book(BaseModel):
@@ -26,16 +26,19 @@ class Book(BaseModel):
     title:str = Field(
         ...,
         min_length=3,
-        max_length=50
+        max_length=50,
+        example="My new book"
     )
     description:str = Field(
         default=None,
         min_length=3,
-        max_length=50
+        max_length=50,
+        example="This is my new book"
     )
     author:Author = Field(...)
-    cover:Optional[str]
+    cover:Optional[bytes]
     price:int = Field(
         default=None,
-        ge=0
+        ge=0,
+        example=20000
     )
